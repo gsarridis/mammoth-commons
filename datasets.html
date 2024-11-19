@@ -1,0 +1,493 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dataset loaders</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .main-content {
+            margin-top: 60px;
+        }
+        .side-menu {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px;
+            padding-top: 70px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .side-menu a {
+            display: block;
+            padding: 5px 20px;
+            color: #495057;
+            text-decoration: none;
+        }
+        .side-menu a:hover {
+            background-color: #e9ecef;
+        }
+        .content-wrapper {
+            margin-left: 220px;
+            margin-right: 220px;
+            padding: 20px;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        
+        /* Hide navbar on small screens */
+        @media (max-width: 576px) {
+            .side-menu {
+                display: none;
+            }
+    
+            .content-wrapper {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 0;
+            }
+            .main-content {
+                margin-top: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="mx-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="datasets.html">Datasets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="models.html">Models</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="analysis_methods.html">Analysis</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Side Menu -->
+    <div class="side-menu">
+        <a href='#auto-csv'>Auto csv</a>
+<a href='#uci'>Uci</a>
+<a href='#custom-csv'>Custom csv</a>
+<a href='#csv-rankings'>Csv rankings</a>
+<a href='#graph'>Graph</a>
+<a href='#graph-csv'>Graph csv</a>
+<a href='#images'>Images</a>
+<a href='#image-pairs'>Image pairs</a>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-content container">
+            <div class="container">
+<h1 class='display-4 text-center my-4'>Dataset loaders</h1>
+<h2 id='auto-csv'>Auto csv</h2>
+<p><p>Loads a CSV file that contains numeric, categorical, and predictive data columns. This automatically detects the characteristics of the dataset being loaded, namely the delimiter that separates the columns, and whether each column contains numeric or categorical data. A <a href="https://pandas.pydata.org/">pandas</a> CSV reader is employed internally. The last categorical column is used as the dataset label. To load the file using different options (e.g., a subset of columns, a different label column) use the custom csv loader instead.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The local file path or a web URL of the file."
+                      data-description=" The local file path or a web URL of the file."
+                      data-name="Path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" If a numeric column has a number of discrete entries than is less than this number (e.g., if it contains binary numeric values) then it is considered to hold categorical instead of numeric data. Minimum accepted value is 2."
+                      data-description=" If a numeric column has a number of discrete entries than is less than this number (e.g., if it contains binary numeric values) then it is considered to hold categorical instead of numeric data. Minimum accepted value is 2."
+                      data-name="Max discrete"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Max discrete
+                    </button>
+<br>
+<h2 id='uci'>Uci</h2>
+<p><p>Loads a UCI dataset that contains numeric, categorical, and predictive data columns. The dataset is downloaded from www.uci.org .</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The name of the dataset."
+                      data-description=" The name of the dataset."
+                      data-name="Dataset name"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Dataset name
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The name of the predictive label."
+                      data-description=" The name of the predictive label."
+                      data-name="Target"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target
+                    </button>
+<br>
+<h2 id='custom-csv'>Custom csv</h2>
+<p><p>Loads a CSV file that contains numeric, categorical, and predictive data columns separated by a user-defined delimiter. Each row corresponds to a different data sample, with the first one sometimes holding column names (this is automatically detected). To use all data in the file and automate discovery of numerical and categorical columns, as well as of delimiters, use the <code>auto csv</code> loader instead. Otherwise, set here all loading parameters. A <a href="https://pandas.pydata.org/">pandas</a> CSV reader is employed internally.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The local file path or a web URL of the file."
+                      data-description=" The local file path or a web URL of the file."
+                      data-name="Path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A list of comma-separated column names that hold numeric data."
+                      data-description=" A list of comma-separated column names that hold numeric data."
+                      data-name="Numeric"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Numeric
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A list of comma-separated column names that hold categorical data."
+                      data-description=" A list of comma-separated column names that hold categorical data."
+                      data-name="Categorical"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Categorical
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The name of the categorical column that holds predictive label for each data sample."
+                      data-description=" The name of the categorical column that holds predictive label for each data sample."
+                      data-name="Label"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Label
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Which character to split loaded csv rows with."
+                      data-description=" Which character to split loaded csv rows with."
+                      data-name="Delimiter"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Delimiter
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to skip invalid lines being read instead of creating an error."
+                      data-description=" Whether to skip invalid lines being read instead of creating an error."
+                      data-name="Skip invalid lines"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Skip invalid lines
+                    </button>
+<br>
+<h2 id='csv-rankings'>Csv rankings</h2>
+<p><p>This is a Loader to load .csv files with information about researchers The <code>Path</code> should be given relative to your locally running instance (e.g.: <em>./data/researchers/Top&#95;researchers.csv</em>) The <code>Delimiter</code> should match the CSV file you have (e.g.: '|')</p> </p>
+<b>Parameters</b><br>Path
+Delimiter
+<br>
+<h2 id='graph'>Graph</h2>
+<p><p>Loads the edges of a graph organized as rows of a comma-delimited file.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A url from which to load the edges, or a pygrank dataset name to be automatically downloaded, preprocessed and loaded."
+                      data-description=" A url from which to load the edges, or a pygrank dataset name to be automatically downloaded, preprocessed and loaded."
+                      data-name="Path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path
+                    </button>
+<br>
+<h2 id='graph-csv'>Graph csv</h2>
+<p><p>This loads the nodes and edges of a graph.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A csv file containing the node identifiers as the first column."
+                      data-description=" A csv file containing the node identifiers as the first column."
+                      data-name="Path nodes"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path nodes
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A csv file, where each raw corresponds to a pair of node identifiers of an edge."
+                      data-description=" A csv file, where each raw corresponds to a pair of node identifiers of an edge."
+                      data-name="Path edges"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path edges
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A comma separated list of attributes to retain from the dataset."
+                      data-description=" A comma separated list of attributes to retain from the dataset."
+                      data-name="Attributes"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Attributes
+                    </button>
+<br>
+<h2 id='images'>Images</h2>
+<p><p>Loads image data from a CSV file holding their sensitive and predictive attribute data, as well as paths relative to a root directory. Loaded images are subjected to a Python transformation.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The path to the CSV file containing information about the dataset."
+                      data-description=" The path to the CSV file containing information about the dataset."
+                      data-name="Path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The root directory where the actual image files are stored."
+                      data-description=" The root directory where the actual image files are stored."
+                      data-name="Image root dir"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Image root dir
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Indicates the predictive attribute in the dataset."
+                      data-description=" Indicates the predictive attribute in the dataset."
+                      data-name="Target"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The batch size at which images should be loaded."
+                      data-description=" The batch size at which images should be loaded."
+                      data-name="Batch size"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Batch size
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to shuffle the loaded images."
+                      data-description=" Whether to shuffle the loaded images."
+                      data-name="Shuffle"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Shuffle
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A path or implementation of a torchvision data transform. Alternatively, paste the transformation code here."
+                      data-description=" A path or implementation of a torchvision data transform. Alternatively, paste the transformation code here."
+                      data-name="Transform path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Transform path
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The transformation target variable that should be extracted after the namesake code runs."
+                      data-description=" The transformation target variable that should be extracted after the namesake code runs."
+                      data-name="Transform variable"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Transform variable
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A comma-separated list of safe libraries that are allowed in the transformation code."
+                      data-description=" A comma-separated list of safe libraries that are allowed in the transformation code."
+                      data-name="Safe libraries"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Safe libraries
+                    </button>
+<br>
+<h2 id='image-pairs'>Image pairs</h2>
+<p><p>Loads image pairs declared in a CSV file. The expected format is to have the first image's identifier in the first column, and the second image's identifier in the second column, Sensitive attributes can be selected from the rest of the columns. The images identifiers read from the columns are transformed to loading paths by string specifications that can contain the symbols: {root} to refer to the root directory, {col} to refer to the column name, and {id} to refer to the column entry.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The path to the CSV file containing information about the dataset."
+                      data-description=" The path to the CSV file containing information about the dataset."
+                      data-name="Path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Path
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The root directory where the actual image files are stored."
+                      data-description=" The root directory where the actual image files are stored."
+                      data-name="Image root dir"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Image root dir
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Indicates the predictive attribute in the dataset."
+                      data-description=" Indicates the predictive attribute in the dataset."
+                      data-name="Target"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The number of image pairs in each batch."
+                      data-description=" The number of image pairs in each batch."
+                      data-name="Batch size"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Batch size
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to shuffle the dataset."
+                      data-description=" Whether to shuffle the dataset."
+                      data-name="Shuffle"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Shuffle
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A path or implementation of a torchvision data transform. Alternatively, paste the transformation code here."
+                      data-description=" A path or implementation of a torchvision data transform. Alternatively, paste the transformation code here."
+                      data-name="Transform path"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Transform path
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The transformation target variable that should be extracted after the namesake code runs."
+                      data-description=" The transformation target variable that should be extracted after the namesake code runs."
+                      data-name="Transform variable"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Transform variable
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" A comma-separated list of safe libraries that are allowed in the transformation code."
+                      data-description=" A comma-separated list of safe libraries that are allowed in the transformation code."
+                      data-name="Safe libraries"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Safe libraries
+                    </button>
+<br>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Modal -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-muted" id="descriptionModalLabel">Description</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="descriptionModalBody">
+            <!-- Description will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+    function showDescriptionModal(button) {
+        const description = button.getAttribute("data-description");
+        const name = button.getAttribute("data-name");
+        document.getElementById("descriptionModalLabel").innerText = name;
+        document.getElementById("descriptionModalBody").innerText = description;
+        const modal = new bootstrap.Modal(document.getElementById("descriptionModal"));
+        modal.show();
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analysis metrics</title>
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <style>
+        .main-content {
+            margin-top: 60px;
+        }
+        .side-menu {
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 200px;
+            padding-top: 70px;
+            background-color: #f8f9fa;
+            border-right: 1px solid #dee2e6;
+        }
+        .side-menu a {
+            display: block;
+            padding: 5px 20px;
+            color: #495057;
+            text-decoration: none;
+        }
+        .side-menu a:hover {
+            background-color: #e9ecef;
+        }
+        .content-wrapper {
+            margin-left: 220px;
+            margin-right: 220px;
+            padding: 20px;
+        }
+        h2 {
+            color: #007bff;
+            border-bottom: 3px solid #007bff;
+            padding-bottom: 5px;
+            margin-top: 20px;
+        }
+        
+        /* Hide navbar on small screens */
+        @media (max-width: 576px) {
+            .side-menu {
+                display: none;
+            }
+    
+            .content-wrapper {
+                margin-left: 0;
+                margin-right: 0;
+                padding: 0;
+            }
+            .main-content {
+                margin-top: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Top Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark fixed-top">
+        <div class="mx-auto">
+            <ul class="navbar-nav">
+                <li class="nav-item">
+                    <a class="nav-link" href="index.html">Home</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="datasets.html">Datasets</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="models.html">Models</a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="analysis_methods.html">Analysis</a>
+                </li>
+            </ul>
+        </div>
+    </nav>
+
+    <!-- Side Menu -->
+    <div class="side-menu">
+        <a href='#card'>Card</a>
+<a href='#interactive-report'>Interactive report</a>
+<a href='#interactive-sklearn-report'>Interactive sklearn report</a>
+<a href='#image-bias-analysis'>Image bias analysis</a>
+<a href='#facex-regions'>Facex regions</a>
+<a href='#facex-embeddings'>Facex embeddings</a>
+<a href='#connection-properties'>Connection properties</a>
+<a href='#exposure-distance-comparison'>Exposure distance comparison</a>
+
+    </div>
+
+    <!-- Main Content -->
+    <div class="content-wrapper">
+        <div class="main-content container">
+            <div class="container">
+<h1 class='display-4 text-center my-4'>Analysis metrics</h1>
+<h2 id='card'>Card</h2>
+<p><p>Creates a model card using the <a href="https://github.com/mever-team/FairBench">FairBench</a> library. The card includes several fairness stamps; these are specific measures of bias or fairness that are commonly used in the algorithmic fairness literature. Only the most prominent of those measures are used as stamps, and they correspond to a perfunctory fairness analysis.</p>  <p>This module computes all applicable FairBench stamps, which summarize behavior across all population groups or intersectional subgroups. Multiple sensitive attributes may be present, such as gender, age, and race. Furthermore, each of those attributes may obtain multiple values, as happens when multiple genders or races are considered. Numeric attributes, like age, are normalized to the range [0,1] and we consider the result as truth values of membership to the group of the maximum value - as opposed to membership to the group with minimum value. A different stamp is computed for each prediction label.</p>  <p>You may optionally create intersectional subgroups, that is, create a separate subgroup for each combination of sensitive attribute values. Many of those groups will have few members if there are too many attributes, and empty groups are ignored during the analysis.</p>  <p>The created model card contains exact descriptions of methods used to compute fairness under the selected stamps, and it lists population groups that were taken into account These come alongside an extensive list of caveats and recommendations that help the reader get a grasp on how they should account for the social context. This material is retrieved from FairBench's online socio-technical database generated through MAMMOth's multidisciplinary activities.</p>  <p>Finally, the generated model card may contain details about out-of-the-box datasets. To get the full picture, a detailed fairness report that also allows you to backtrack computations is available in the <code>interactive report</code> module.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to consider all non-empty group intersections during analysis. This does nothing if there is only one sensitive attribute, but may also be computationally intensive if too many group intersections are selected."
+                      data-description=" Whether to consider all non-empty group intersections during analysis. This does nothing if there is only one sensitive attribute, but may also be computationally intensive if too many group intersections are selected."
+                      data-name="Intersectional"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Intersectional
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to compare groups pairwise, or each group to the whole population. For example, if the 4/5ths rule stamp is applicable, it computes positive rates and obtains the minimum ratio, either across all pairs of groups (for pairwise comparison) or otherwise between each group and the total population."
+                      data-description=" Whether to compare groups pairwise, or each group to the whole population. For example, if the 4/5ths rule stamp is applicable, it computes positive rates and obtains the minimum ratio, either across all pairs of groups (for pairwise comparison) or otherwise between each group and the total population."
+                      data-name="Compare groups"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Compare groups
+                    </button>
+<br>
+<h2 id='interactive-report'>Interactive report</h2>
+<p><p>Creates an interactive report using the FairBench library. The report creates traceable evaluations that you can shift through to find actual sources of unfairness.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to consider all non-empty group intersections during analysis. This does nothing if there is only one sensitive attribute."
+                      data-description=" Whether to consider all non-empty group intersections during analysis. This does nothing if there is only one sensitive attribute."
+                      data-name="Intersectional"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Intersectional
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to compare groups pairwise, or each group to the whole population."
+                      data-description=" Whether to compare groups pairwise, or each group to the whole population."
+                      data-name="Compare groups"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Compare groups
+                    </button>
+<br>
+<h2 id='interactive-sklearn-report'>Interactive sklearn report</h2>
+<p><p>Creates an interactive report using the FairBench library, after running an internal training-test split on a basic sklearn model. The report creates traceable evaluations that you can shift through to find sources of unfairness on a common task.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Which sklearn predictor should be used."
+                      data-description=" Which sklearn predictor should be used."
+                      data-name="Predictor"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Predictor
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to consider all non-empty group intersections during analysis. This does nothing if there is only one sensitive attribute."
+                      data-description=" Whether to consider all non-empty group intersections during analysis. This does nothing if there is only one sensitive attribute."
+                      data-name="Intersectional"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Intersectional
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" Whether to compare groups pairwise, or each group to the whole population."
+                      data-description=" Whether to compare groups pairwise, or each group to the whole population."
+                      data-name="Compare groups"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Compare groups
+                    </button>
+<br>
+<h2 id='image-bias-analysis'>Image bias analysis</h2>
+<p><p>Performs analysis of image bias, and recommends mitigation strategies.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The type of predictive task. It should be either face verification or image classification."
+                      data-description=" The type of predictive task. It should be either face verification or image classification."
+                      data-name="Task"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Task
+                    </button>
+<br>
+<h2 id='facex-regions'>Facex regions</h2>
+<p><p>Analyses 19 facial regions and accessories to provide explanations.</p>  <span class="alert alert-warning alert-dismissible fade show" role="alert" style="display: inline-block; padding: 10px;"> <i class="bi bi-exclamation-triangle-fill"></i> XAI analysis may be computationally intensive. </span> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The integer identifier of the target class."
+                      data-description=" The integer identifier of the target class."
+                      data-name="Target class"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target class
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The layer to be explained."
+                      data-description=" The layer to be explained."
+                      data-name="Target layer"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target layer
+                    </button>
+<br>
+<h2 id='facex-embeddings'>Facex embeddings</h2>
+<p><p>Write your metric's description here.</p> </p>
+<b>Parameters</b><br> <button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The integer identifier of the target class."
+                      data-description=" The integer identifier of the target class."
+                      data-name="Target class"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target class
+                    </button>
+<button
+                      type="button"
+                      class="btn btn-light"
+                      data-bs-toggle="tooltip"
+                      data-bs-placement="top"
+                      title=" The layer to be explained."
+                      data-description=" The layer to be explained."
+                      data-name="Target layer"
+                      onclick="showDescriptionModal(this)">
+                      <i class="bi bi-info-circle"></i> Target layer
+                    </button>
+<br>
+<h2 id='connection-properties'>Connection properties</h2>
+<p><p>Performs analysis of connection properties in a graph. If no sensitive attributes are provided, all node column attributes are considered sensitive.</p> </p>
+<h2 id='exposure-distance-comparison'>Exposure distance comparison</h2>
+<p><p>Compute the exposure distance between the protected and non-protected groups in the dataset and ranking. Parameters:</p>  <ul> <li><p><code>N runs</code>: Choose a natural number between 1 and 100</p></li> <li><p><code>Sensitive attributes</code>: Which attribute is relevant for fairness analysis.  To select this, click the blue '+' and then use the dropdown.  Currently, only <em>Gender</em> is supported</p></li> <li><p><code>Protected</code>: The protected group for the fairness analysis. Currenly, only <em>female</em> or <em>male</em> are supported</p></li> <li><p><code>Sampling Attribute</code>: The value by which we group the analysis for finer-grained results. One of <em>Nationality&#95;IncomeGroup</em> or <em>Nationality&#95;Region</em>.</p></li> <li><p><code>Ranking Variable</code>: This refers to the main criteria by which ranking is done.  One of <em>Degree</em>, <em>Citations</em> or <em>Productivity</em></p></li> </ul> </p>
+<b>Parameters</b><br>N runs
+Protected
+Sampling attribute
+Ranking variable
+<br>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- Description Modal -->
+    <div class="modal fade" id="descriptionModal" tabindex="-1" aria-labelledby="descriptionModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-lg modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title text-muted" id="descriptionModalLabel">Description</h5>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body" id="descriptionModalBody">
+            <!-- Description will be injected here -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+<script>
+    function showDescriptionModal(button) {
+        const description = button.getAttribute("data-description");
+        const name = button.getAttribute("data-name");
+        document.getElementById("descriptionModalLabel").innerText = name;
+        document.getElementById("descriptionModalBody").innerText = description;
+        const modal = new bootstrap.Modal(document.getElementById("descriptionModal"));
+        modal.show();
+    }
+</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
