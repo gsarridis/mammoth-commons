@@ -89,6 +89,7 @@
 <a href='#onnx'>Onnx</a>
 <a href='#onnx-ensemble'>Onnx ensemble</a>
 <a href='#torch'>Torch</a>
+<a href='#torch2onnx'>Torch2onnx</a>
 <a href='#fair-node-ranking'>Fair node ranking</a>
 <a href='#mitigation-ranking'>Mitigation ranking</a>
 
@@ -103,103 +104,173 @@
 <p><p>Signifies that the analysis should focus solely on the fairness of the dataset.</p> </p>
 <h2 id='onnx'>Onnx</h2>
 <p><p>Loads an inference model stored in <a href="https://onnx.ai/">ONNx</a> format. This is a generic cross-platform format for representing machine learning models with a common set of operations. Several machine learning frameworks can export to this format. The loaded model should be compatible with the dataset being analysed. For example, the same data columns as in the dataset should be used for training on tabular data.</p>  <p>ONNx supports several different runtimes, but this loader's implementation selects the <code>CPUExecutionProvider</code> runtime to run on, therefore maintaining compatibility with most machines. For inference in GPUs, prefer storing and loading models in formats that are guaranteed to maintain all features that could be included in the architectures of respective frameworks; this can be achieved with different model loaders.</p>  <p>Here are some quick links on how to export ONNx models from popular frameworks:</p>  <ul> <li><a href="https://onnx.ai/sklearn-onnx">scikit-learn</a></li> <li><a href="https://pytorch.org/tutorials/beginner/onnx/export simple model to onnx tutorial.html">PyTorch</a></li> <li><a href="https://onnxruntime.ai/docs/tutorials/tf-get-started.html">TensorFlow</a></li> </ul> </p>
-<b>Parameters</b><br> <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" A local path or url pointing to the loaded file. The loader checks for the existence of the local path, and if it does not exist the `urllib.request` module is obtained to read the model's bytes."
-                      data-description=" A local path or url pointing to the loaded file. The loader checks for the existence of the local path, and if it does not exist the `urllib.request` module is obtained to read the model's bytes."
-                      data-name="Path"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Path
-                    </button>
+<b>Parameters</b><br><button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" A local path or url pointing to the loaded file. The loader checks for the existence of the local path, and if it does not exist the `urllib.request` module reads the model's bytes from a URL."
+                          data-description=" A local path or url pointing to the loaded file. The loader checks for the existence of the local path, and if it does not exist the `urllib.request` module reads the model's bytes from a URL."
+                          data-name="Path"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Path
+                        </button>
 <br>
 <h2 id='onnx-ensemble'>Onnx ensemble</h2>
 <p><p>This ONNX Ensemble Module enables predictions using a <a href="https://scikit-learn.org/stable/modules/ensemble.html" target=" blank">boosting ensemble</a> mechanism, ideal for combining multiple weak learners to improve prediction accuracy. Boosting, a powerful technique in machine learning, focuses on training a series of simple models (weak learners) – often single-depth <a href="https://scikit-learn.org/stable/modules/tree.html#classification" target=" blank">decision trees</a> – and combining them into a strong ensemble model.</p>  <p><b>Usage Instructions:</b> To load a model, users need to supply a zip file path. This zip file should include multiple weak learners, each saved in the ONNX format, as well as parameters, such as weights (often denoted as ‘alphas’), that define each learner’s contribution to the final model. For an example of preparing this file, please see <a href="https://github.com/mammoth-eu/mammoth-commons/blob/dev/tests/test-mfppb-onnx-ensemble.ipynb" target=" blank">our notebook</a>.</p>  <p>The module currently supports the MMM-Fair Boosting Post Pareto (MFBPP) model, which is a specialized approach that applies fairness-aware boosting. In particular, the MFBPP model leverages multi-fairness metric MMM-fair (Multi-Max Mistreatment) to ensure that prediction outcomes remain unbiased across different demographic groups (defined by protected attributes) and achieves <i>Pareto optimality</i> by balancing fairness and predictive performance across different class. For a detailed explanation of MFBPP, you can refer to <a href="https://link.springer.com/chapter/10.1007/978-3-031-18840-4 21" target=" blank">the paper</a>.</p>  <p><b>Train and upload: </b> To create and integrate your own MFBPP trained on your intended data, please follow the instructions given in our <a href="https://github.com/mammoth-eu/mammoth-commons/blob/dev/tests/test mfppb onnx ensemble.ipynb" target=" blank">Test instructions</a> notebook.</p> </p>
-<b>Parameters</b><br> <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" A zip file containing the ensemble elements such as weak learners, weight parameters, etc."
-                      data-description=" A zip file containing the ensemble elements such as weak learners, weight parameters, etc."
-                      data-name="Path"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Path
-                    </button>
+<b>Parameters</b><br><button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" A zip file containing the ensemble elements such as weak learners, weight parameters, etc."
+                          data-description=" A zip file containing the ensemble elements such as weak learners, weight parameters, etc."
+                          data-name="Path"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Path
+                        </button>
 <br>
 <h2 id='torch'>Torch</h2>
 <p><p>Loads a pytorch model that comprises a Python code initializing the architecture and a file of trained parameters. For safety, the architecture's definition is allowed to directly import only specified libraries.</p> </p>
-<b>Parameters</b><br> <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" The path in which the architecture's state is stored."
-                      data-description=" The path in which the architecture's state is stored."
-                      data-name="State path"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> State path
-                    </button>
+<b>Parameters</b><br><button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The path in which the architecture's state is stored."
+                          data-description=" The path in which the architecture's state is stored."
+                          data-name="State path"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> State path
+                        </button>
 <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" The path in which the architecture's initialization script resides. Alternatively, you may also just paste the initialization code in this field."
-                      data-description=" The path in which the architecture's initialization script resides. Alternatively, you may also just paste the initialization code in this field."
-                      data-name="Path"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Path
-                    </button>
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The path in which the architecture's initialization script resides. Alternatively, you may also just paste the initialization code in this field."
+                          data-description=" The path in which the architecture's initialization script resides. Alternatively, you may also just paste the initialization code in this field."
+                          data-name="Path"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Path
+                        </button>
 <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" The variable in the model path's script to which the architecture is assigned."
-                      data-description=" The variable in the model path's script to which the architecture is assigned."
-                      data-name="Name"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Name
-                    </button>
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The variable in the model path's script to which the architecture is assigned."
+                          data-description=" The variable in the model path's script to which the architecture is assigned."
+                          data-name="Name"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Name
+                        </button>
 <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" A comma-separated list of libraries that can be imported."
-                      data-description=" A comma-separated list of libraries that can be imported."
-                      data-name="Safe libraries"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Safe libraries
-                    </button>
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" A comma-separated list of libraries that can be imported."
+                          data-description=" A comma-separated list of libraries that can be imported."
+                          data-name="Safe libraries"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Safe libraries
+                        </button>
+<button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" A decision threshold that treats outputs as separate classes. If this is set to zero (default), a softmax is applied to outputs. For binary classification, this is equivalent to setting the decision threshold at 0.5. Otherwise, each output is thresholded separately."
+                          data-description=" A decision threshold that treats outputs as separate classes. If this is set to zero (default), a softmax is applied to outputs. For binary classification, this is equivalent to setting the decision threshold at 0.5. Otherwise, each output is thresholded separately."
+                          data-name="Multiclass threshold"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Multiclass threshold
+                        </button>
+<br>
+<h2 id='torch2onnx'>Torch2onnx</h2>
+<p><p>Loads a ONNX model that comprises a Python code initializing the architecture and a file of trained parameters. For safety, the architecture's definition is allowed to directly import only specified libraries.</p> </p>
+<b>Parameters</b><br><button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The path in which the architecture's state is stored."
+                          data-description=" The path in which the architecture's state is stored."
+                          data-name="State path"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> State path
+                        </button>
+<button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The path in which the architecture's initialization script resides. Alternatively, you may also just paste the initialization code in this field."
+                          data-description=" The path in which the architecture's initialization script resides. Alternatively, you may also just paste the initialization code in this field."
+                          data-name="Path"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Path
+                        </button>
+<button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The variable in the model path's script to which the architecture is assigned."
+                          data-description=" The variable in the model path's script to which the architecture is assigned."
+                          data-name="Name"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Name
+                        </button>
+Input size
+<button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" A comma-separated list of libraries that can be imported."
+                          data-description=" A comma-separated list of libraries that can be imported."
+                          data-name="Safe libraries"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Safe libraries
+                        </button>
+<button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" A decision threshold that treats outputs as separate classes. If this is set to zero (default), a softmax is applied to outputs. For binary classification, this is equivalent to setting the decision threshold at 0.5. Otherwise, each output is thresholded separately."
+                          data-description=" A decision threshold that treats outputs as separate classes. If this is set to zero (default), a softmax is applied to outputs. For binary classification, this is equivalent to setting the decision threshold at 0.5. Otherwise, each output is thresholded separately."
+                          data-name="Multiclass threshold"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Multiclass threshold
+                        </button>
 <br>
 <h2 id='fair-node-ranking'>Fair node ranking</h2>
 <p><p>Constructs a node ranking algorithm that is a variation non-personalized PageRank. The base algorithm is often computes a notion of centrality/structural importance for each node in the graph, and employs a diffusion parameter in the range [0, 1). Find more details on how the algorithm works based on the following seminal paper:</p>  <p><i>Page, L. (1999). The PageRank citation ranking: Bringing order to the web. Technical Report.</i></p>  <p>The base node ranking algorithm is enriched by fairness-aware interventions implemented by the <a href="https://pygrank.readthedocs.io/en/latest/">pygrank</a> library. The latter may run on various computational backends, but <code>numpy</code> is selected due to its compatibility with a broad range of software and hardware. All implemented algorithms transfer node score mass from over-represented groups of nodes to those with lesser average mass using different strategies that determine the redistribution details. Fairness is imposed in terms of centrality scores achieving similar score mass between groups. The three available strategies are described here:</p>  <ul> <li>`none` does not employ any fairness intervention and runs the base algorithm.</li> <li>`uniform` applies a uniform rank redistribution strategy.</li> <li>`original` tries to preserve the order of original node ranks by distributing more score mass to those.</li> </ul> </p>
-<b>Parameters</b><br> <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" The diffusion parameters of the corresponding PageRank algorithm."
-                      data-description=" The diffusion parameters of the corresponding PageRank algorithm."
-                      data-name="Diffusion"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Diffusion
-                    </button>
+<b>Parameters</b><br><button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The diffusion parameters of the corresponding PageRank algorithm."
+                          data-description=" The diffusion parameters of the corresponding PageRank algorithm."
+                          data-name="Diffusion"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Diffusion
+                        </button>
 <button
-                      type="button"
-                      class="btn btn-light"
-                      data-bs-toggle="tooltip"
-                      data-bs-placement="top"
-                      title=" The redistribution strategy. Can be none, uniform or original."
-                      data-description=" The redistribution strategy. Can be none, uniform or original."
-                      data-name="Redistribution"
-                      onclick="showDescriptionModal(this)">
-                      <i class="bi bi-info-circle"></i> Redistribution
-                    </button>
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" The redistribution strategy. Can be none, uniform or original."
+                          data-description=" The redistribution strategy. Can be none, uniform or original."
+                          data-name="Redistribution"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Redistribution
+                        </button>
 <br>
 <h2 id='mitigation-ranking'>Mitigation ranking</h2>
 <p><p>This is a fair Ranking loader with Sampling. In this model, we will use a mitigation strategy based on Statistical Parity, and compare it with a normal ranking based on one of the Numerical columns</p> </p>

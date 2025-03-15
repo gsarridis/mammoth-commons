@@ -1,8 +1,4 @@
-from demonstrator.backend.loaders import (
-    dataset_loaders,
-    model_loaders,
-    analysis_methods,
-)
+from mai.backend.catalogue_loaders import registry
 
 # Template prefix with updated styling and centered navbar
 template_prefix = """
@@ -169,9 +165,9 @@ def prepare(catalogue, page_title):
 
 # Generate pages with the sidebar and content
 for page, (catalogue, page_title) in {
-    "datasets.html": (dataset_loaders, "Dataset loaders"),
-    "models.html": (model_loaders, "Model loaders"),
-    "analysis_methods.html": (analysis_methods, "Analysis metrics"),
+    "datasets.html": (registry.dataset_loaders, "Dataset loaders"),
+    "models.html": (registry.model_loaders, "Model loaders"),
+    "analysis_methods.html": (registry.analysis_methods, "Analysis metrics"),
 }.items():
     sidebar_content, main_content = prepare(catalogue, page_title)
     full_content = (
@@ -190,7 +186,7 @@ index_content = """
 <p class='lead text-center'>Explore the core modules of the MAMMOth toolkit and demonstrator.</p>
 <p>This catalogue gathers all MAMMOth modules provided by the demonstrator and toolkit.
 These hold project research results and third-party libraries to perform various kinds of fairness assessment.
-Some will also guide you towards mitigation strategies that you can either test or be guided on how to apply them. 
+Some will also guide you on how to apply mitigation strategies. 
 The documentation found here is the same as the one shown by the respective tools. However, by organizing
 everything in one place, it becomes easier to understand all available options for the toolkit.
 Use the navigation links to overview datasets, models, and analysis methods.</p>
