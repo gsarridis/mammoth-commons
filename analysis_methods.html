@@ -95,6 +95,7 @@
 <a href='#facex-embeddings'>Facex embeddings</a>
 <a href='#multi-objective-report'>Multi objective report</a>
 <a href='#exposure-distance-comparison'>Exposure distance comparison</a>
+<a href='#augmentation-report'>Augmentation report</a>
 
     </div>
 
@@ -352,6 +353,8 @@
                           <i class="bi bi-info-circle"></i> Ranking variable
                         </button>
 <br>
+<h2 id='augmentation-report'>Augmentation report</h2>
+<p><p>This module generates an interactive HTML report featuring a <a href="https://plotly.com/python/sunburst-charts/" target=" blank">Plotly sunburst pie chart</a> visualization to explore imbalances in the dataset based on subgroups defined by sensitive attributes and the target variable. This helps to quickly identify any potential imbalances in the dataset, allowing users to assess fairness and identify areas that may require intervention, such augmentation.</p>  <p>Furthermore, the report visually presents different augmentation strategies designed to mitigate data imbalances, per sensitive attribute, as an interactive <a href="https://plotly.com/python/bar-charts/." target=" blank">Plotly bar chart</a>. These strategies adjust the distribution of the dataset by oversampling specific subgroups with synthetic samples, ensuring more equitable representation of sensitive attributes and target classes. The following augmentation strategies are visualized:</p>  <ul> <li><strong>Class:</strong> Balances the class distribution within each subgroup by sampling the minority class.</li> <li><strong>Class &amp; Protected:</strong> Ensures equal sample distribution across all subgroups by sampling both majority and minority classes.</li> <li><strong>Protected:</strong> Balances the number of instances across different groups without considering class labels.</li> <li><strong>Class (Ratio):</strong> Maintains the same class ratio across all groups as found in the largest group.</li> </ul>  <p>These visualizations allow users to observe the effects of each strategy on the data distribution, helping to understand how the dataset is being augmented.</p>  <p>For more information, refer to our full paper: <strong>"Synthetic Tabular Data Generation for Class Imbalance and Fairness: A Comparative Study"</strong> <a href="https://arxiv.org/pdf/2409.05215">Link to paper</a>.</p> </p>
 
             </div>
         </div>
