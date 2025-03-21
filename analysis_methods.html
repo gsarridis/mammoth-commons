@@ -87,7 +87,7 @@
     <div class="side-menu">
         <a href='#card'>Card</a>
 <a href='#interactive-report'>Interactive report</a>
-<a href='#sklearn-report'>Sklearn report</a>
+<a href='#sklearn-audit'>Sklearn audit</a>
 <a href='#optimal-transport'>Optimal transport</a>
 <a href='#bias-scan'>Bias scan</a>
 <a href='#image-bias-analysis'>Image bias analysis</a>
@@ -165,7 +165,7 @@
                           <i class="bi bi-info-circle"></i> Compare groups
                         </button>
 <br>
-<h2 id='sklearn-report'>Sklearn report</h2>
+<h2 id='sklearn-audit'>Sklearn audit</h2>
 <p><p>One way to evaluate the fairness of a dataset is by testing for biases using simple models with limited degrees of freedom. This module audits datasets by training such models provided by the <a href="https://scikit-learn.org/stable/index.html">scikit-learn</a> library on half of the dataset. The second half is then used as test data to assess predictive performance and detect classification or scoring biases.</p>  <p>Test data are used to generate a fairness and bias report using the <a href="https://fairbench.readthedocs.io/">FairBench</a> library. If strong biases appear in the simple models that are explored, they may also persist in more complex models trained on the same data. To focus on the most significant biases, adjust the minimum shown deviation parameter. The report provides multiple types of fairness and bias assessments and can be viewed in three different formats, where the model card contains a subset of results but attaches to these socio-technical concerns to be taken into account:</p>  <ol> <li>A summary table of results.</li> <li>A simplified model card with key fairness concerns.</li> <li>A full detailed report.</li> </ol>  <p>The module's report summarizes how a model behaves on a provided dataset across different population groups. These groups are based on sensitive attributes like gender, age, and race. Each attribute can have multiple values, such as several genders or races. Numeric attributes, like age, are normalized to the range [0,1] and treated as fuzzy values, where 0 indicates membership to a fuzzy group of "small" values, and 1 indicates membership to a fuzzy group of "large" values. A separate set of fairness metrics is calculated for each prediction label.</p>  <p>If intersectional subgroup analysis is enabled, separate subgroups are created for each combination of sensitive attribute values. However, if there are too many attributes, some groups will be small or empty. Empty groups are ignored in the analysis. The report may also include information about built-in datasets.</p> </p>
 <b>Parameters</b><br><button
                           type="button"
@@ -318,7 +318,7 @@
 <h2 id='multi-objective-report'>Multi objective report</h2>
 <p><p>This module presents an interactive <a href="https://plotly.com/python/3d-charts/" target=" blank">Plotly 3D plot</a> visualizing multiple objectives to evaluate model fairness and performance trade-offs. The report highlights three primary objectives: <b>accuracy loss</b>, <b>balanced accuracy loss</b>, and <b>discrimination (MMM-fairness) loss</b>. Each point plotted within the 3D space represents a <i>Pareto-optimal</i> solution, which achieves an optimal balance between these objectives where no single objective can improve without worsening another.</p>  <p>Users can hover over any solution point to display the corresponding loss values for each objective. Additionally, each point includes a <b>theta</b> value, indicating up to which sequence in the ONNX ensemble the particular solution is achieved. This allows users to observe performance changes throughout different stages of the ensemble, helping them better understand the trade-offs involved in each model configuration.</p>  <p><span class="alert alert-warning alert-dismissible fade show" role="alert" style="display: inline-block; padding: 10px;"> <i class="bi bi-exclamation-triangle-fill"></i> The multi-objective report generates predictions at each step of the partial ensemble. This may result in slower processing times when the number of Pareto solutions is high.</span></p> </p>
 <h2 id='exposure-distance-comparison'>Exposure distance comparison</h2>
-<p><p>Compute the exposure distance between the protected and non-protected groups in the dataset and ranking. Sensitive attributes is a comma-separated list of the attributes relevant for fairness analysis. WCurrently, only <em>Gender</em> is supported.</p> </p>
+<p><p>Compute the exposure distance between the protected and non-protected groups in the dataset and ranking. Sensitive attributes is a comma-separated list of the attributes relevant for fairness analysis. Currently, only <em>Gender</em> is supported.</p> </p>
 <b>Parameters</b><br><button
                           type="button"
                           class="btn btn-light"
