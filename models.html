@@ -86,6 +86,7 @@
     <!-- Side Menu -->
     <div class="side-menu">
         <a href='#no-model'>No model</a>
+<a href='#trivial-predictor'>Trivial predictor</a>
 <a href='#onnx'>Onnx</a>
 <a href='#onnx-ensemble'>Onnx ensemble</a>
 <a href='#torch'>Torch</a>
@@ -102,6 +103,8 @@
 <h1 class='display-4 text-center my-4'>Models</h1>
 <h2 id='no-model'>No model</h2>
 <p><p>Signifies that the analysis should focus solely on the fairness of the dataset.</p> </p>
+<h2 id='trivial-predictor'>Trivial predictor</h2>
+<p><p>Creates a trivial predictor that returns the most common predictive label value among provided data. If the label is numeric, the median is computed instead. This model servers as an informed baseline of what happens even for an uninformed predictor. Several kinds of class biases may exist, for example due to different class imbalances for each sensitive attribute dimension (e.g., for old white men compared to young hispanic women).</p> </p>
 <h2 id='onnx'>Onnx</h2>
 <p><p>Loads an inference model stored in <a href="https://onnx.ai/">ONNx</a> format. This is a generic cross-platform format for representing machine learning models with a common set of operations. Several machine learning frameworks can export to this format. The loaded model should be compatible with the dataset being analysed. For example, the same data columns as in the dataset should be used for training on tabular data.</p>  <p>ONNx supports several different runtimes, but this loader's implementation selects the <code>CPUExecutionProvider</code> runtime to run on, therefore maintaining compatibility with most machines. For inference in GPUs, prefer storing and loading models in formats that are guaranteed to maintain all features that could be included in the architectures of respective frameworks; this can be achieved with different model loaders.</p>  <p>Here are some quick links on how to export ONNx models from popular frameworks:</p>  <ul> <li><a href="https://onnx.ai/sklearn-onnx">scikit-learn</a></li> <li><a href="https://pytorch.org/tutorials/beginner/onnx/export simple model to onnx tutorial.html">PyTorch</a></li> <li><a href="https://onnxruntime.ai/docs/tutorials/tf-get-started.html">TensorFlow</a></li> </ul> </p>
 <b>Parameters</b><br><button
@@ -109,22 +112,33 @@
                           class="btn btn-light"
                           data-bs-toggle="tooltip"
                           data-bs-placement="top"
-                          title=" A local path or url pointing to the loaded file. The loader checks for the existence of the local path, and if it does not exist the `urllib.request` module reads the model's bytes from a URL."
-                          data-description=" A local path or url pointing to the loaded file. The loader checks for the existence of the local path, and if it does not exist the `urllib.request` module reads the model's bytes from a URL."
+                          title=" A local path or url pointing to the ONNX file. The loader checks for the existence of the local path, and if it does not exist downloads it locally from the provided URL before loading."
+                          data-description=" A local path or url pointing to the ONNX file. The loader checks for the existence of the local path, and if it does not exist downloads it locally from the provided URL before loading."
                           data-name="Path"
                           onclick="showDescriptionModal(this)">
                           <i class="bi bi-info-circle"></i> Path
                         </button>
+<button
+                          type="button"
+                          class="btn btn-light"
+                          data-bs-toggle="tooltip"
+                          data-bs-placement="top"
+                          title=" Whether model training included the sensitive attributes that will be analysed in the next step or not. Including those attributes could help mitigate bias for some bias-aware training algorithms. Leave checked if you just trained the model with all available attributes."
+                          data-description=" Whether model training included the sensitive attributes that will be analysed in the next step or not. Including those attributes could help mitigate bias for some bias-aware training algorithms. Leave checked if you just trained the model with all available attributes."
+                          data-name="Trained with sensitive"
+                          onclick="showDescriptionModal(this)">
+                          <i class="bi bi-info-circle"></i> Trained with sensitive
+                        </button>
 <br>
 <h2 id='onnx-ensemble'>Onnx ensemble</h2>
-<p><p>This ONNX Ensemble Module enables predictions using a <a href="https://scikit-learn.org/stable/modules/ensemble.html" target=" blank">boosting ensemble</a> mechanism, ideal for combining multiple weak learners to improve prediction accuracy. Boosting, a powerful technique in machine learning, focuses on training a series of simple models (weak learners) – often single-depth <a href="https://scikit-learn.org/stable/modules/tree.html#classification" target=" blank">decision trees</a> – and combining them into a strong ensemble model.</p>  <p><b>Usage Instructions:</b> To load a model, users need to supply a zip file path. This zip file should include multiple weak learners, each saved in the ONNX format, as well as parameters, such as weights (often denoted as ‘alphas’), that define each learner’s contribution to the final model. For an example of preparing this file, please see <a href="https://github.com/mammoth-eu/mammoth-commons/blob/dev/tests/test-mfppb-onnx-ensemble.ipynb" target=" blank">our notebook</a>.</p>  <p>The module currently supports the MMM-Fair Boosting Post Pareto (MFBPP) model, which is a specialized approach that applies fairness-aware boosting. In particular, the MFBPP model leverages multi-fairness metric MMM-fair (Multi-Max Mistreatment) to ensure that prediction outcomes remain unbiased across different demographic groups (defined by protected attributes) and achieves <i>Pareto optimality</i> by balancing fairness and predictive performance across different class. For a detailed explanation of MFBPP, you can refer to <a href="https://link.springer.com/chapter/10.1007/978-3-031-18840-4 21" target=" blank">the paper</a>.</p>  <p><b>Train and upload: </b> To create and integrate your own MFBPP trained on your intended data, please follow the instructions given in our <a href="https://github.com/mammoth-eu/mammoth-commons/blob/dev/tests/test mfppb onnx ensemble.ipynb" target=" blank">Test instructions</a> notebook.</p> </p>
+<p><p>This ONNX Ensemble Module enables predictions using a <a href="https://scikit-learn.org/stable/modules/ensemble.html" target=" blank">boosting ensemble</a> mechanism, ideal for combining multiple weak learners to improve prediction accuracy. Boosting, a powerful technique in machine learning, focuses on training a series of simple models (weak learners) – often single-depth <a href="https://scikit-learn.org/stable/modules/tree.html#classification" target=" blank">decision trees</a> – and combining them into a strong ensemble model. However, the model loader module allows any model converted to <a href="https://onnxruntime.ai/docs/tutorials/traditional-ml.html#convert-model-to-onnx">ONNX</a> format and zipped inside a directory path along with other meta-informations (if any) stored in <a href="https://numpy.org/doc/2.1/reference/generated/numpy.save.html">.npy</a> format.</p>  <p><b>Usage Instructions:</b> To load a model, users need to supply a zip file path. This zip file should include at least one or possibly many trained models, each saved in the ONNX format, as well as parameters, such as weights (often denoted as ‘alphas’), that define each learner’s contribution to the final model. For an example of preparing this file, please see <a href="https://github.com/mammoth-eu/mammoth-commons/blob/dev/tests/test-mfppb-onnx-ensemble.ipynb" target=" blank">our notebook</a>.</p>  <p>The module recomends using the <a href="https://pypi.org/project/mmm-fair/"> MMM-Fair models</a>. MMM-Fair is a fairness-aware machine learning framework designed to support high-stakes AI decision-making under competing fairness and accuracy demands. The three M’s stand for: • Multi-Objective: Optimizes across classification accuracy, balanced accuracy, and fairness (specifically, maximum group-level discrimination). • Multi-Attribute: Supports multiple protected groups (e.g., race, gender, age) simultaneously, analyzing group-specific disparities. • Multi-Definition: Evaluates and compares fairness under multiple definitions—Demographic Parity (DP), Equal Opportunity (EP), and Equalized Odds (EO). MMM-Fair enables developers, researchers, and decision-makers to explore the full spectrum of possible trade-offs and select the model configuration that aligns with their social or organizational goals. For theoretical understanding of MMM-Fair, it is recomended to read the <a href="https://link.springer.com/chapter/10.1007/978-3-031-18840-4 21" target=" blank">published scientific article</a> that introduced the foundation of the MMM-algorithms.</p>  <p><b>Train and upload: </b> To create and integrate your own MMM-Fair model trained on your intended data, please follow the instructions given in the <a href="https://pypi.org/project/mmm-fair/" target=" blank">Pypi package guidance</a>.</p> </p>
 <b>Parameters</b><br><button
                           type="button"
                           class="btn btn-light"
                           data-bs-toggle="tooltip"
                           data-bs-placement="top"
-                          title=" A zip file containing the ensemble elements such as weak learners, weight parameters, etc."
-                          data-description=" A zip file containing the ensemble elements such as weak learners, weight parameters, etc."
+                          title=" A zip file containing the ensemble elements such as learners/models, weight parameters, etc."
+                          data-description=" A zip file containing the ensemble elements such as learners/models, weight parameters, etc."
                           data-name="Path"
                           onclick="showDescriptionModal(this)">
                           <i class="bi bi-info-circle"></i> Path
